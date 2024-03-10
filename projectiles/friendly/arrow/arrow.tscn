@@ -1,0 +1,48 @@
+[gd_scene load_steps=10 format=3 uid="uid://pav4x8hxeh76"]
+
+[ext_resource type="Script" path="res://projectiles/friendly/arrow/arrow.gd" id="1_ur3qo"]
+[ext_resource type="Script" path="res://scripts/damage.gd" id="2_6loxl"]
+[ext_resource type="PackedScene" uid="uid://cep5ckdff6k72" path="res://components/hurtbox/hurtbox_component.tscn" id="2_8yb6b"]
+[ext_resource type="Texture2D" uid="uid://c2x3hmgh6a1vc" path="res://assets/roguelikeSheet_transparent.png" id="3_f6waw"]
+[ext_resource type="PackedScene" uid="uid://gj3u1p0hos3d" path="res://components/velocity/velocity_component.tscn" id="4_3piq3"]
+
+[sub_resource type="Resource" id="Resource_enotj"]
+script = ExtResource("2_6loxl")
+amount = 4.0
+type = 1
+knockback = 0
+
+[sub_resource type="CircleShape2D" id="CircleShape2D_n40pa"]
+radius = 2.0
+
+[sub_resource type="CircleShape2D" id="CircleShape2D_h5e0c"]
+radius = 3.0
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_jd472"]
+atlas = ExtResource("3_f6waw")
+region = Rect2(901, 153, 15, 15)
+
+[node name="Arrow" type="CharacterBody2D" node_paths=PackedStringArray("velocity_component", "hurtbox")]
+collision_layer = 4
+script = ExtResource("1_ur3qo")
+velocity_component = NodePath("VelocityComponent")
+damage = SubResource("Resource_enotj")
+duration = 10.0
+hurtbox = NodePath("HurtboxComponent")
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="."]
+shape = SubResource("CircleShape2D_n40pa")
+
+[node name="HurtboxComponent" parent="." instance=ExtResource("2_8yb6b")]
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="HurtboxComponent"]
+position = Vector2(-1, 0)
+shape = SubResource("CircleShape2D_h5e0c")
+
+[node name="Sprite2D" type="Sprite2D" parent="."]
+rotation = 1.5708
+texture = SubResource("AtlasTexture_jd472")
+
+[node name="VelocityComponent" parent="." instance=ExtResource("4_3piq3")]
+max_speed = 1000.0
+acceleration = 500.0

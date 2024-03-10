@@ -1,0 +1,52 @@
+[gd_scene load_steps=7 format=3 uid="uid://gf0no2yrtk6w"]
+
+[ext_resource type="PackedScene" uid="uid://b61kqlvoqevh1" path="res://entities/knight/knight.tscn" id="1_2mvk3"]
+[ext_resource type="Script" path="res://scripts/main.gd" id="1_028mu"]
+[ext_resource type="Texture2D" uid="uid://c2x3hmgh6a1vc" path="res://assets/roguelikeSheet_transparent.png" id="1_j4g7x"]
+[ext_resource type="PackedScene" uid="uid://blj8b8erpsoii" path="res://entities/dummy/dummy.tscn" id="4_su55g"]
+
+[sub_resource type="TileSetAtlasSource" id="TileSetAtlasSource_22qh0"]
+resource_name = "grass"
+texture = ExtResource("1_j4g7x")
+separation = Vector2i(2, 2)
+texture_region_size = Vector2i(15, 15)
+2:15/0 = 0
+3:15/0 = 0
+4:15/0 = 0
+4:16/0 = 0
+4:17/0 = 0
+3:17/0 = 0
+3:16/0 = 0
+2:16/0 = 0
+2:17/0 = 0
+1:17/0 = 0
+0:17/0 = 0
+0:16/0 = 0
+1:16/0 = 0
+
+[sub_resource type="TileSet" id="TileSet_21n2t"]
+tile_size = Vector2i(15, 15)
+sources/0 = SubResource("TileSetAtlasSource_22qh0")
+
+[node name="Main" type="Node2D" node_paths=PackedStringArray("projectiles", "entities")]
+y_sort_enabled = true
+script = ExtResource("1_028mu")
+projectiles = NodePath("Projectiles")
+entities = NodePath("Entities")
+
+[node name="Ground" type="TileMap" parent="."]
+tile_set = SubResource("TileSet_21n2t")
+format = 2
+layer_0/tile_data = PackedInt32Array(-65535, 131072, 15, -65534, 196608, 15, -65533, 262144, 15, 3, 262144, 16, 65539, 262144, 17, 2, 196608, 16, 1, 131072, 16, 65537, 131072, 17, 65538, 196608, 17)
+
+[node name="Entities" type="Node2D" parent="."]
+y_sort_enabled = true
+
+[node name="Knight" parent="Entities" instance=ExtResource("1_2mvk3")]
+
+[node name="Dummy" parent="Entities" instance=ExtResource("4_su55g")]
+position = Vector2(0, 28)
+
+[node name="Projectiles" type="Node2D" parent="."]
+z_index = 1
+y_sort_enabled = true

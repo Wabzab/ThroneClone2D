@@ -1,0 +1,63 @@
+[gd_scene load_steps=12 format=3 uid="uid://blj8b8erpsoii"]
+
+[ext_resource type="Script" path="res://entities/entity.gd" id="1_5tkg6"]
+[ext_resource type="PackedScene" uid="uid://cmlfp8gxyr6pr" path="res://components/hitbox/hitboxComponent.tscn" id="2_4cgmm"]
+[ext_resource type="PackedScene" uid="uid://biueo5abrpq0o" path="res://components/body/body_component.tscn" id="2_22rn0"]
+[ext_resource type="Texture2D" uid="uid://c2x3hmgh6a1vc" path="res://assets/roguelikeSheet_transparent.png" id="3_gpyhr"]
+[ext_resource type="PackedScene" uid="uid://dapfu0udkq5oe" path="res://components/health/health_component.tscn" id="5_ym8m0"]
+
+[sub_resource type="CircleShape2D" id="CircleShape2D_jxc0f"]
+radius = 2.0
+
+[sub_resource type="CircleShape2D" id="CircleShape2D_6uis2"]
+radius = 7.0
+
+[sub_resource type="Shader" id="Shader_k4kmq"]
+code = "shader_type canvas_item;
+
+uniform float hit_opacity = 0;
+
+void fragment(){
+ COLOR.rgb = texture(TEXTURE, UV).rgb * (1.0 - hit_opacity) + vec3(1,1,1) * hit_opacity;
+ COLOR.a = texture(TEXTURE, UV).a;
+}
+"
+
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_u7ask"]
+shader = SubResource("Shader_k4kmq")
+shader_parameter/hit_opacity = 0.0
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_8vpgi"]
+atlas = ExtResource("3_gpyhr")
+region = Rect2(17, 544, 15, 15)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_uwqcc"]
+atlas = ExtResource("3_gpyhr")
+region = Rect2(459, 459, 15, 15)
+
+[node name="Dummy" type="CharacterBody2D"]
+collision_layer = 2
+script = ExtResource("1_5tkg6")
+common_name = "Dummy"
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="."]
+position = Vector2(0, 5)
+shape = SubResource("CircleShape2D_jxc0f")
+
+[node name="HitboxComponent" parent="." instance=ExtResource("2_4cgmm")]
+group = 2
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="HitboxComponent"]
+position = Vector2(0, 1)
+shape = SubResource("CircleShape2D_6uis2")
+
+[node name="BodyComponent" parent="." instance=ExtResource("2_22rn0")]
+material = SubResource("ShaderMaterial_u7ask")
+base = SubResource("AtlasTexture_8vpgi")
+head = SubResource("AtlasTexture_uwqcc")
+
+[node name="HealthComponent" parent="." node_paths=PackedStringArray("body") instance=ExtResource("5_ym8m0")]
+body = NodePath("../BodyComponent")
+max_health = 1e+08
+
+[connection signal="hit" from="HitboxComponent" to="HealthComponent" method="damage"]

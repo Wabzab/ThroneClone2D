@@ -1,0 +1,38 @@
+[gd_scene load_steps=7 format=3 uid="uid://bf2bp2lne4104"]
+
+[ext_resource type="Script" path="res://projectiles/friendly/slash/slash.gd" id="1_q128w"]
+[ext_resource type="Script" path="res://scripts/damage.gd" id="2_3yxn2"]
+[ext_resource type="PackedScene" uid="uid://cep5ckdff6k72" path="res://components/hurtbox/hurtbox_component.tscn" id="2_kpppu"]
+
+[sub_resource type="Resource" id="Resource_0lsig"]
+script = ExtResource("2_3yxn2")
+amount = 2.0
+type = 0
+knockback = 0
+
+[sub_resource type="CircleShape2D" id="CircleShape2D_ag36e"]
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_pwqef"]
+size = Vector2(24, 40)
+
+[node name="Slash" type="CharacterBody2D" node_paths=PackedStringArray("hurtbox")]
+collision_layer = 4
+script = ExtResource("1_q128w")
+damage = SubResource("Resource_0lsig")
+duration = 0.25
+hurtbox = NodePath("HurtboxComponent")
+
+[node name="ColorRect" type="ColorRect" parent="."]
+offset_top = -20.0
+offset_right = 24.0
+offset_bottom = 20.0
+color = Color(0, 1, 1, 0.419608)
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="."]
+shape = SubResource("CircleShape2D_ag36e")
+
+[node name="HurtboxComponent" parent="." instance=ExtResource("2_kpppu")]
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="HurtboxComponent"]
+position = Vector2(12, 0)
+shape = SubResource("RectangleShape2D_pwqef")
